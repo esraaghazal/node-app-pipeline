@@ -7,14 +7,12 @@ pipeline {
     }
 
     stages {
-// to pull the source code from the GitHub repository
 
         stage('Checkout') {
             steps {
-                git 'https://github.com/esraaghazal/node-app-pipeline.git'
+                echo 'Source code checked out from GitHub'
             }
         }
-// build the Docker image using the Dockerfile in the repository
 
         stage('Build Docker Image') {
             steps {
@@ -22,7 +20,6 @@ pipeline {
             }
         }
 
-// run the Docker container from the built image
         stage('Run Container') {
             steps {
                 sh '''
