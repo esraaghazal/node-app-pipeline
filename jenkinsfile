@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_NAME = "nodejs-app"
+        CONTAINER_NAME = "nodejs-container"
+    }
+
+    stages {
+// to pull the source code from the GitHub repository
+
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/esraaghazal/node-app-pipeline.git'
+            }
+        }
+// build the Docker image using the Dockerfile in the repository
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t $IMAGE_NAME .'
+            }
+        }
+
+// run the Docker container from the built image
+        stage('Run Container') {
+            steps {
+                sh '''
+                docker rm -f $CONTAINER_NAME || true
+                docker run -d \
+                  --name $CONTAINER_NAME \
+                  -p 3000:3000 \
+                  $IMAGE_NAME
+                '''
+            }
+        }
+
+    }
+}
